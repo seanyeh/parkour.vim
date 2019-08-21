@@ -61,7 +61,7 @@ function! s:FileInfo(full_path, root_path)
         let file_part = strpart(file_part, 0, len(file_part) - len(suffix))
     endif
 
-    if type_part ==# 'controller' || type_part ==# 'spec_controller'
+    if type_part ==# 'controller' || type_part ==# 'controller_spec'
         let file_part = s:Unpluralize(file_part)
     endif
 
