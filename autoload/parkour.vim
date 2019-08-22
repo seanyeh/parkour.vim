@@ -81,11 +81,18 @@ function! s:BeginsWith(str, part)
 endfunction!
 
 function! s:Pluralize(str)
-    return a:str.'s'
+    " Replace y with ies, excluding ay, ey, oy, uy
+    if match(a:str, '[^aeou]y$') != -1
+        return strpart(a:str, 0, len(a:str) - 1).'ies'
+    else
+        return a:str.'s'
+    endif
 endfunction!
 
 function! s:Unpluralize(str)
-    if s:EndsWith(a:str, 's')
+    if s:EndsWith(a:str, 'ies')
+        return strpart(a:str, 0, len(a:str) - 3).'y'
+    elseif s:EndsWith(a:str, 's')
         return strpart(a:str, 0, len(a:str) - 1)
     else
         return a:str
