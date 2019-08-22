@@ -96,7 +96,7 @@ function! s:Unpluralize(str)
         return strpart(a:str, 0, len(a:str) - 1)
     else
         return a:str
-    end
+    endif
 endfunction!
 
 function! s:TryOpen(file_part, prefix, suffix, pluralize)
@@ -119,7 +119,7 @@ function! s:TryOpen(file_part, prefix, suffix, pluralize)
             let filename = substitute(filename, w1, w2, 'g')
         elseif match(filename, w2) != -1
             let filename = substitute(filename, w2, w1, 'g')
-        end
+        endif
     endfor
     if filereadable(filename)
         :exe 'edit' filename
@@ -184,7 +184,7 @@ function! parkour#RailsOpen(to_type)
     else
         echom 'Parkour - type not recognized: '.to_type
         return
-    end
+    endif
 
     let from_prefix = s:SecondaryPrefix(from_type)
     let to_prefix = s:SecondaryPrefix(to_type)
@@ -195,7 +195,7 @@ function! parkour#RailsOpen(to_type)
         " Remove from_prefix
         if s:BeginsWith(filename, from_prefix)
             let filename = strpart(filename, len(from_prefix))
-        end
+        endif
         " Add to_prefix
         let filename = to_prefix.filename
     endif
