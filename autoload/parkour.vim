@@ -5,6 +5,10 @@ if !exists('g:parkour_custom_substitutions')
     let g:parkour_custom_substitutions = {}
 endif
 
+if !exists('g:parkour_custom_paths')
+    let g:parkour_custom_paths = []
+endif
+
 function! s:FindProjectRoot(filename)
     let dirs = split(a:filename, '/')
 
@@ -18,6 +22,15 @@ function! s:FindProjectRoot(filename)
     endwhile
 
     echom 'Parkour - Cannot find project root'
+    return ''
+endfunction!
+
+function! s:ToCustomFilePart(filename, from_key, to_key)
+    for obj in g:parkour_custom_paths
+        if has_key(obj, a:from_key) && obj[a:from_key] == a:filename && has_key(obj, a:to_key)
+            return obj[a:to_key]
+        endif
+    endfor
     return ''
 endfunction!
 
@@ -63,6 +76,12 @@ function! s:FileInfo(full_path, root_path)
 
     if type_part ==# 'controller' || type_part ==# 'controller_spec'
         let file_part = s:Unpluralize(file_part)
+    endif
+
+    " If filename in custom paths, set file_part
+    let custom_file_part = s:ToCustomFilePart(file_part, type_part, 'file_part')
+    if custom_file_part != ''
+        let file_part = custom_file_part
     endif
 
     return {
@@ -196,6 +215,13 @@ function! parkour#RailsOpen(to_type)
         if s:BeginsWith(filename, from_prefix)
             let filename = strpart(filename, len(from_prefix))
         endif
+
+        " Test for custom change in file_part
+        let custom_file_part = s:ToCustomFilePart(filename, 'file_part', to_type)
+        if custom_file_part != ''
+            let filename = custom_file_part
+        endif
+
         " Add to_prefix
         let filename = to_prefix.filename
     endif
